@@ -57,9 +57,9 @@ sudo update-alternatives --config g++
 
 ### <a name='Build'></a>Build
 ```bash
-git clone -b x86 https://github.com/THeWakeSystems/fcc.git
-# If you use arm machine
-# git clone -b arm https://github.com/THeWakeSystems/fcc.git
+git clone -b arm https://github.com/THeWakeSystems/fcc.git
+# If you use x86 machine
+# git clone -b x86 https://github.com/THeWakeSystems/fcc.git
 make
 source shrc
 ```
