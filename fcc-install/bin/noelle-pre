@@ -1,0 +1,64 @@
+#!/bin/bash -e
+
+installDir=${ROOT}/fcc-install
+
+# Partition the arguments between options and not
+options="" ;
+notOptions="" ;
+for var in "$@" ; do
+  if [[ $var == -* ]] ; then
+    options="$options $var" ;
+  else 
+    notOptions="$notOptions $var" ;
+  fi
+done
+
+# Strip debugging symbols 
+cmdToExecute="opt --strip-debug --strip-debug-declare $notOptions -o $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Delete dead functions
+cmdToExecute="noelle-deadcode $notOptions $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Normalize the code
+cmdToExecute="noelle-simplification $notOptions -o $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Inline functions
+cmdToExecute="noelle-inline \"-noelle-inliner-verbose=1 $options\" $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Normalize the code
+cmdToExecute="noelle-simplification $notOptions -o $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Delete dead functions
+cmdToExecute="noelle-deadcode $notOptions $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Normalize the code
+cmdToExecute="noelle-simplification $notOptions -o $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Run the enablers
+cmdToExecute="noelle-enable $notOptions $notOptions $options"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Normalize the code
+cmdToExecute="noelle-simplification $notOptions -o $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Add metadata to all loops of the program
+cmdToExecute="noelle-meta-loop-embed $notOptions -o $notOptions"
+echo $cmdToExecute ;
+eval $cmdToExecute ;

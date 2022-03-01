@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if test $# -lt 2 ; then
+  echo "USAGE: `basename $0` INPUT_BITCODE OUTPUT_BITCODE" ;
+  exit 1;
+fi
+
+installDir=${ROOT}/fcc-install
+
+# Remove the PDG from the bitcode
+cmdToExecute="noelle-load -load ${installDir}/lib/CleanMetadata.so -CleanMetadata -clean-prof-metadata=false -clean-pdg-metadata=true $1 -o $2" 
+echo $cmdToExecute ;
+eval $cmdToExecute 

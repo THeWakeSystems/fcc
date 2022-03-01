@@ -1,0 +1,10 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+# Set the command to execute
+cmdToExecute="noelle-parallel-load -load ${installDir}/lib/Parallelizer.so -parallelizer ${@}"
+echo $cmdToExecute ;
+
+# Execute
+eval $cmdToExecute ;

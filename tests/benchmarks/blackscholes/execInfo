@@ -1,0 +1,3 @@
+base_dir=`pwd`
+export PROFILEARGS=1 ${base_dir}/inputs/train/in_3K.txt ${base_dir}/outputs/train/out_3K.txt
+export TESTARG=1 ${base_dir}/inputs/test/in_64K.txt ${base_dir}/outputs/test/out_64K.txt

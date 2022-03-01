@@ -1,0 +1,27 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+OPT="opt" ;
+
+########### LLVM analyses
+AA_BASE="-basicaa"
+
+
+###########     SVF
+if test -f "${installDir}/lib/libSvf.so" ; then
+  WPAPASS="-load ${installDir}/lib/libSvf.so -load ${installDir}/lib/libCudd.so -stat=false"
+  WPAPASSINV="-break-constgeps"
+else
+  WPAPASS="" ;
+  WPAPASSINV=""
+fi
+
+
+########### Transformations
+TRANSFORMATIONS_BEFORE_PARALLELIZATION="${AA_BASE} ${WPAPASS} -mem2reg -simplifycfg -simplifycfg-sink-common=false -instcombine -tailcallelim -loop-simplify -lcssa -licm -loop-unswitch -globalopt -instcombine -ipsccp -dce -gvn -dse -adce -loop-simplify -lcssa -indvars -loop-deletion -instcombine -indvars ${WPAPASSINV} -lowerswitch -mergereturn --break-crit-edges -loop-simplify -lcssa "
+
+cmdToExecute="${OPT} ${TRANSFORMATIONS_BEFORE_PARALLELIZATION} $@"
+echo $cmdToExecute ;
+
+eval $cmdToExecute 

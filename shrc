@@ -1,0 +1,35 @@
+#!/bin/bash
+
+PATH1=`pwd`
+
+PATH2="$(dirname "${BASH_SOURCE[0]}")"
+
+str=${PATH2:0:1}
+
+if [ $str == "/" ] ;
+then
+        export ROOT="$PATH2"
+else
+        export ROOT="$PATH1/$PATH2"
+fi
+
+#echo ${ROOT}
+
+# LLVM PATH
+export LLVM_INSTALL_DIR=${ROOT}/llvm-install
+export LLVM_OBJ_DIR=$LLVM_INSTALL_DIR
+export LLVM_INCLUDE_DIR=$LLVM_INSTALL_DIR/include
+export LLVM_BINS_DIR=$LLVM_INSTALL_DIR/bin
+export LLVM_LIBS_DIR=$LLVM_INSTALL_DIR/lib
+
+# FCC PATH
+export FCC_INSTALL_DIR=${ROOT}/fcc-install
+export FCC_OBJ_DIR=$FCC_INSTALL_DIR
+export FCC_BINS_DIR=${FCC_INSTALL_DIR}/bin
+export FCC_LIBS_DIR=$FCC_INSTALL_DIR/lib
+export FCC_SMTX_DIR=$FCC_INSTALL_DIR/support/smtx
+
+
+# PATH & LD_LIBRARY_PATH
+export PATH=$LLVM_BINS_DIR:$FCC_BINS_DIR:$PATH
+export LD_LIBRARY_PATH=$LLVM_LIBS_DIR:$FCC_LIBS_DIR:$LD_LIBRARY_PATH

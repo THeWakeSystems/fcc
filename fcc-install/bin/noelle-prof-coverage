@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+installDir=${ROOT}/fcc-install
+
+# Fetch the inputs
+if test $# -lt 2 ; then
+  echo "USAGE: `basename $0` SRC_BC BINARY [LIBRARY]*" ;
+  exit 0;
+fi
+srcBC="$1" ;
+profExec="$2" ;
+libs="${@:3}" ;
+
+# Local variables
+profBC="${profExec}.bc" ;
+
+# Clean
+rm -f $profExec *.profraw ;
+
+# Inject code needed by the profiler
+opt -pgo-instr-gen -instrprof $srcBC -o $profBC ;
+
+# Generate the binary
+clang $profBC -fprofile-instr-generate ${libs} -o $profExec ;
+
+# Clean
+rm $profBC ;

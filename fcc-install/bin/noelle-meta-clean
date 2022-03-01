@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if test $# -lt 2 ; then
+  echo "USAGE: `basename $0` INPUT_BITCODE OUTPUT_BITCODE" ;
+  exit 1;
+fi
+
+installDir=${ROOT}/fcc-install
+
+# Set the command to execute
+cmdToExecute="noelle-load -load ${installDir}/lib/CleanMetadata.so -CleanMetadata -clean-prof-metadata=true -clean-pdg-metadata=true $1 -o $2" 
+echo $cmdToExecute ;
+
+# Execute the command
+eval $cmdToExecute 
+
+# Set the command to execute
+cmdToExecute="opt --strip-named-metadata $2 -o $2" ;
+echo $cmdToExecute ;
+
+# Execute the command
+eval $cmdToExecute 

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+# Embed PDG Metadata
+cmdToExecute="noelle-load -PDGAnalysis -noelle-pdg-verbose=3 -noelle-pdg-embed $@"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
