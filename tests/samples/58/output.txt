@@ -1,0 +1,5 @@
+YES
+water 9
+flour 14
+cabbage 16
+bean 4

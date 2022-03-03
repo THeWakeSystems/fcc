@@ -1,0 +1,9 @@
+5 3
+water 100
+flour 20
+cabbage 71
+pork 12
+bean 5
+2 water 20 flour 5
+3 water 70 cabbage 54 pork 10
+5 water 1 flour 1 cabbage 1 pork 2 bean 1
