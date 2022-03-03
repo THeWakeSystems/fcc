@@ -6,7 +6,7 @@ PATH2="$(dirname "${BASH_SOURCE[0]}")"
 
 str=${PATH2:0:1}
 
-if [ $str == "/" ] ;
+if [ $str = "/" ] ;
 then
         export ROOT="$PATH2"
 else
