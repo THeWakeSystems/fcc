@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+installDir=${ROOT}/fcc-install
+
+OPT="opt" ;
+
+
+###########     LLVM alias analyses
+AA="-globals-aa -cfl-steens-aa -tbaa -scev-aa -cfl-anders-aa"
+
+
+###########     SCAF
+if test -f "${installDir}/lib/libSCAFUtilities.so" ; then
+  SCAFPASS="-load ${installDir}/lib/libSCAFUtilities.so -load ${installDir}/lib/libMemoryAnalysisModules.so" ;
+  LOOPAA=`loopaa`
+else
+  SCAFPASS="" ;
+  LOOPAA=" " ;
+fi
+
+
+###########     SVF
+if test -f "${installDir}/lib/libSvf.so" ; then
+  WPAPASS="-load ${installDir}/lib/libSvf.so -load ${installDir}/lib/libCudd.so -stat=false"
+else
+  WPAPASS="" ;
+fi
+
+
+########### NOELLE analyses
+PDGPASS="-load ${installDir}/lib/AllocAA.so -load ${installDir}/lib/TalkDown.so -load ${installDir}/lib/CallGraph.so -load ${installDir}/lib/PDGAnalysis.so"
+
+
+########### All analyses
+ANALYSES="${AA} ${LOOPAA} -scalar-evolution -loops -domtree -postdomtree -noellescaf -noellesvf"
+
+
+########### Transformations
+OPTPASSES="-load ${installDir}/lib/CallGraph.so  ${WPAPASS} ${SCAFPASS} ${PDGPASS} -load ${installDir}/lib/Architecture.so -load ${installDir}/lib/BasicUtilities.so -load ${installDir}/lib/Task.so -load ${installDir}/lib/DataFlow.so -load ${installDir}/lib/HotProfiler.so -load ${installDir}/lib/LoopStructure.so -load ${installDir}/lib/Loops.so -load ${installDir}/lib/Scheduler.so -load ${installDir}/lib/OutlinerPass.so -load ${installDir}/lib/Noelle.so"
+
+
+# Set the command to execute
+cmdToExecute="${OPT} ${OPTPASSES} ${ANALYSES} ${@}"
+
+# Execute the command
+#echo $cmdToExecute
+eval $cmdToExecute 

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+echo $installDir

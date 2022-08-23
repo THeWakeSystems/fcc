@@ -1,0 +1,18 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+# Code transformations
+ENABLERS="-load ${installDir}/lib/LoopDistribution.so \
+  -load ${installDir}/lib/LoopUnroll.so \
+  -load ${installDir}/lib/LoopWhilify.so \
+  -load ${installDir}/lib/LoopInvariantCodeMotion.so \
+  -load ${installDir}/lib/SCEVSimplification.so \
+"
+
+# Run the enablers until a fixed point is reached
+echo "NOELLE: Enablers: Start" ;
+cmdToExecute="noelle-fixedpoint $1 $2 ${ENABLERS} -load ${installDir}/lib/Enablers.so -enablers ${@:3}"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+echo "NOELLE: Enablers: Exit" ;

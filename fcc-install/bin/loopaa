@@ -1,0 +1,31 @@
+#!/bin/bash
+
+echo -basic-loop-aa
+echo -scev-loop-aa
+echo -auto-restrict-aa
+echo -intrinsic-aa
+echo -global-malloc-aa
+echo -pure-fun-aa
+echo -semi-local-fun-aa
+
+echo -phi-maze-aa
+echo -no-capture-global-aa
+echo -no-capture-src-aa
+echo -type-aa
+echo -no-escape-fields-aa
+echo -acyclic-aa
+
+echo -disjoint-fields-aa
+echo -field-malloc-aa
+echo -loop-variant-allocation-aa
+echo -std-in-out-err-aa
+echo -array-of-structures-aa
+
+echo -kill-flow-aa
+echo -callsite-depth-combinator-aa
+echo -unique-access-paths-aa
+
+echo -llvm-aa-results 
+
+# disable svf for now. Make sure svf analysis run before when enabled
+# echo -svf-results

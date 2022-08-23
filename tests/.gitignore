@@ -1,0 +1,13 @@
+*.bc
+*.time
+*.ll
+*.out
+*.exe
+*.s
+rabbit*
+*.dot
+*.dump
+result.specpriv.profile.txt
+result.lamp.profile
+benchmark.profraw
+results

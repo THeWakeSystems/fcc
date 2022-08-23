@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Invocation:
+# noelle-fixedpoint INPUT_BITCODE OUTPUT_BITCODE ALL_OPTIONS_TO_PASS_TO_NOELLE_LOAD
+
+installDir=${ROOT}/fcc-install
+
+# Set the file names
+IRFileInput="`mktemp`" ;
+IRFileInputLL="`mktemp`" ;
+IRFileOutput="`mktemp`" ;
+IRFileOutputLL="`mktemp`" ;
+codeSize="`mktemp`" ;
+
+# Print
+echo "NOELLE: FixedPoint: Start" ;
+echo "NOELLE: FixedPoint:   Input: $1" ;
+echo "NOELLE: FixedPoint:   Output: $2" ;
+echo "NOELLE: FixedPoint:   Temporary input: $IRFileInput (.ll version is $IRFileInputLL)" ;
+echo "NOELLE: FixedPoint:   Temporary output: $IRFileOutput (.ll version is $IRFileOutputLL)" ;
+
+# Copy the initial input file
+cp $1 $IRFileInput ;
+
+# Normalize the code
+echo "NOELLE: FixedPoint:   Normalize the code" ;
+cmdToExecute="noelle-norm $IRFileInput -o $IRFileOutput" ;
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+cp $IRFileOutput $IRFileInput ;
+
+# Invoke the enablers
+echo "NOELLE: FixedPoint:   Run until a fixed point is reached" ;
+let c=0; 
+while true ; do
+  echo "NOELLE: FixedPoint:     Invocation $c" ;
+
+  # Set the command to execute the enablers
+  cmdToExecute="noelle-load ${@:3} $IRFileInput -o $IRFileOutput"
+  echo $cmdToExecute ;
+  eval $cmdToExecute ;
+
+  # Check if we got an error
+  if test $? -ne 0 ; then
+    echo "ERROR" ;
+    exit 1;
+  fi
+
+  # Check if the bitcode has been modified
+  noelle-codesize $IRFileInput > $codeSize ;
+  inputCodeLines=`tail -n 1 $codeSize | awk '{print $1}'` ;
+  noelle-codesize $IRFileOutput > $codeSize ;
+  outputCodeLines=`tail -n 1 $codeSize | awk '{print $1}'` ;
+  linesDifferent=`echo "$outputCodeLines - $inputCodeLines" | bc` ;
+  if test "$linesDifferent" == "0" ; then
+
+    # Copy the final output
+    cp $IRFileOutput $2 ;
+    break ;
+  fi
+  echo "NOELLE: FixedPoint:       There are $linesDifferent different lines of code" ;
+
+  # Normalize the code
+  echo "NOELLE: FixedPoint:       Normalize the code" ;
+  cmdToExecute="noelle-norm $IRFileOutput -o $IRFileOutput"
+  echo $cmdToExecute ;
+  eval $cmdToExecute ;
+
+  # Copy the output to the input
+  cp $IRFileOutput $IRFileInput ;
+
+  let c=$c+1; 
+done
+
+# Clean
+rm $IRFileInput $IRFileInputLL $IRFileOutput $IRFileOutputLL $codeSize ;
+
+# Exit
+echo "NOELLE: FixedPoint: Exit" ;

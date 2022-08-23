@@ -1,0 +1,66 @@
+#! /bin/bash -e
+: '
+Goal: 
+run the following as long as it outputs a file indicating to continue
+opt $(PRE_OPTPASSES) -Inliner $(OPTIONS) $@ -o $@
+'
+
+installDir=${ROOT}/fcc-install
+
+function expand_rel_path {
+  local VAL=$1 ;
+  # Was stripping quotes, no longer passes quotes
+  # VAL=${VAL:0:${#VAL}-0} ;
+  NEWVAL=${VAL//\~/$HOME} ;
+  echo $NEWVAL ;
+}
+
+function invoke_inliner {
+  local BITCODE_FILE=$1 ;
+
+  noelle-parallel-load -load ${installDir}/lib/Inliner.so "-inliner" $OPTIONS $BITCODE_FILE "-o" $BITCODE_FILE ;
+  noelle-norm $BITCODE_FILE "-o" $BITCODE_FILE ;
+
+  return 0;
+}
+
+function runSimplify {
+  local OPTIONS=$1 ;
+  local FILE_NAME=$(expand_rel_path "$2") &> /dev/null ;
+  local ITER=0 ;
+
+  # Create the temporary file
+  fileToModify=`mktemp` ;
+
+  # Set the initial bitcode
+  cp $FILE_NAME $fileToModify ;
+
+  rm -f dgsimplify_**
+  touch "dgsimplify_continue.txt"
+  while test -e "dgsimplify_continue.txt" ; do
+    rm "dgsimplify_continue.txt"
+    let ITER=ITER+1 
+    printf "Running Inliner to inline calls within SCCs, iteration: $ITER\n"
+    invoke_inliner $fileToModify ;
+  done
+
+  ITER=0
+  rm -f dgsimplify_**
+  touch "dgsimplify_do_hoist.txt"
+  touch "dgsimplify_continue.txt"
+  while test -e "dgsimplify_continue.txt" ; do
+    rm "dgsimplify_continue.txt"
+    let ITER=ITER+1 
+    printf "Running Inliner to hoist loops to main, iteration: $ITER\n"
+    invoke_inliner $fileToModify ;
+  done
+
+  # Copy the inlined bitcode to the final one
+  cp $fileToModify $FILE_NAME ;
+
+  # Clean
+  rm -f dgsimplify_**
+  rm $fileToModify ;
+}
+
+runSimplify "$1" "$2"

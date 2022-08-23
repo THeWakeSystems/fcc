@@ -1,0 +1,10 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+# Set the command to execute
+cmdToExecute="noelle-load -PDGAnalysis -noelle-pdg-verbose=3 -noelle-pdg-dump -disable-output $@" 
+echo $cmdToExecute ;
+
+# Execute the command
+eval $cmdToExecute 

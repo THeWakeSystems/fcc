@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+installDir=${ROOT}/fcc-install
+
+# Delete dead functions until a fixed point is reached
+echo "NOELLE: DeadFunctions: Start" ;
+cmdToExecute="noelle-fixedpoint $1 $2 -load ${installDir}/lib/DeadFunction.so -noelle-dfe ${@:3}"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+echo "NOELLE: DeadFunctions: Exit" ;

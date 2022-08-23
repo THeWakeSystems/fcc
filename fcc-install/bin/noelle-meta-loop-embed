@@ -1,0 +1,10 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+# Set the command to execute
+cmdToExecute="noelle-load -load ${installDir}/lib/LoopMetadata.so -LoopMetadata ${@}"
+echo $cmdToExecute ;
+
+# Execute the command
+eval $cmdToExecute 

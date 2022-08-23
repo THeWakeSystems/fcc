@@ -1,0 +1,13 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+# Code transformations
+PARALLELIZATION_TECHNIQUES="-load ${installDir}/lib/ParallelizationTechnique.so -load ${installDir}/lib/DSWP.so -load ${installDir}/lib/DOALL.so -load ${installDir}/lib/HELIX.so"
+
+# Set the command to execute
+cmdToExecute="noelle-load -load ${installDir}/lib/Heuristics.so ${PARALLELIZATION_TECHNIQUES} ${@}"
+echo $cmdToExecute ;
+
+# Execute
+eval $cmdToExecute ;

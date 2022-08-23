@@ -1,0 +1,2 @@
+export PROFILEARGS="0 1000 1000"
+export TESTARG="0 2048 2048 "

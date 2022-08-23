@@ -1,0 +1,15 @@
+#!/bin/bash
+
+installDir=${ROOT}/fcc-install
+
+# Process the raw data
+outputFile=`mktemp` ;
+llvm-profdata merge $1 -output=$outputFile ;
+
+# Run HotProfiler
+cmdToExecute="opt -pgo-test-profile-file=${outputFile} -block-freq -pgo-instr-use ${@:2}"
+echo $cmdToExecute ;
+eval $cmdToExecute ;
+
+# Clean
+rm $outputFile ;
