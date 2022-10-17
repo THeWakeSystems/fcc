@@ -109,7 +109,7 @@ fcc code.cpp -p <output_file>
 #For Example
 fcc code.cpp -p test
 ```
-4. Run the binary
+3. Run the binary
 
 ```bash
 time NUM_WORKERS=<thread_number> <output_file> < <input_file>
