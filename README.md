@@ -66,7 +66,7 @@ source shrc
 
 ## <a name='GettingStarted'></a>Getting Started
 
-### <a name='Compilationprocess'></a>Compilation process
+### <a name='buildbenchmarks'></a>Build Benchmarks
 1. Cd to the source file directory of each benchmark.
 ```bash
 #For Example
@@ -85,12 +85,38 @@ fcc <source_file> -p <output_file>
 fcc 2mm.c -p 2mm
 ```
 
-### <a name='Runthebinary'></a>Run the binary
+4. Run the binary
+
 ```bash
 time NUM_WORKERS=<thread_number> <output_file> ${TESTARG}
 #For Example
 time NUM_WORKERS=4 ./2mm ${TESTARG}
 ```
+The user needs to specify the number of threads to run.
+
+### <a name='buildsamples'></a>Build Samples
+
+1. Cd to the source file directory of each sample.
+
+```bash
+#For Example
+cd ./tests/samples/1
+```
+
+2. One step compilation
+```bash
+fcc code.cpp -p <output_file>
+#For Example
+fcc code.cpp -p test
+```
+4. Run the binary
+
+```bash
+time NUM_WORKERS=<thread_number> <output_file> < <input_file>
+#For Example
+time NUM_WORKERS=4 ./test < input.txt
+```
+
 The user needs to specify the number of threads to run.
 
 ## <a name='Cooperation'></a>Cooperation
