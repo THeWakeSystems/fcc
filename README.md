@@ -105,6 +105,7 @@ cd ./tests/samples/1
 
 2. One step compilation
 ```bash
+export PROFILEARGS1=`pwd`/input.txt
 fcc code.cpp -p <output_file>
 #For Example
 fcc code.cpp -p test
